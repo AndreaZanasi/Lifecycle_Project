@@ -42,8 +42,6 @@ public:
   {
     RCLCPP_INFO(get_logger(), "Activating node: %s", node_name_.c_str());
     pub_->on_activate();
-    logic_running_ = true;
-    logic_thread_ = std::thread(&Node1::logic_function, this);
     return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
   }
 
@@ -53,10 +51,6 @@ public:
   {
     RCLCPP_INFO(get_logger(), "Deactivating node: %s", node_name_.c_str());
     pub_->on_deactivate();
-    logic_running_ = false;
-    if (logic_thread_.joinable()) {
-      logic_thread_.join();
-    }
     return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
   }
 
@@ -106,38 +100,10 @@ private:
     pub_->publish(std::move(msg));
   }
 
-  void logic_function()
-  {
-    int cycle = 0;
-    while (logic_running_) {
-      std::this_thread::sleep_for(std::chrono::seconds(2));
-      ++cycle;
-      RCLCPP_INFO(this->get_logger(), "Logic cycle: %d", cycle);
-      if (cycle == 4) {
-        try {
-          int a = 1;
-          int b = 0;
-          if (b == 0) {
-            throw std::runtime_error("Division by zero simulated");
-          }
-          int c = a / b;
-          (void)c;
-        } catch (const std::exception &e) {
-          RCLCPP_ERROR(this->get_logger(), "Exception in logic: %s. Transitioning to deactivate.", e.what());
-          // Request transition to deactivate
-          this->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE);
-          break;
-        }
-      }
-    }
-  }
-
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::String>> pub_;
   std::shared_ptr<rclcpp::TimerBase> timer_;
   std::string node_name_;
   std::chrono::milliseconds period_;
-  std::atomic<bool> logic_running_{false};
-  std::thread logic_thread_;
 };
 
 int main(int argc, char * argv[])

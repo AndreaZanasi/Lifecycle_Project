@@ -204,12 +204,49 @@ private:
         uint8_t state = get_node_state(node_name);
         if (state != lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN) {
             RCLCPP_INFO(this->get_logger(), "Current state for node %s: %u", node_name.c_str(), state);
-            
+            if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+                if (change_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE)) {
+                    RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Node configured successfully.\033[0m", node_name.c_str());
+                    // After configuring, try to activate
+                    uint8_t new_state = get_node_state(node_name);
+                    if (new_state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+                        if (change_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE)) {
+                            RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Node activated successfully.\033[0m", node_name.c_str());
+                        } else {
+                            RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to activate node after configuring.\033[0m", node_name.c_str());
+                        }
+                    }
+                } else {
+                    RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to configure node.\033[0m", node_name.c_str());
+                }
+            } else if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+                if (change_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE)) {
+                    RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Node activated successfully.\033[0m", node_name.c_str());
+                } else {
+                    RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to activate node.\033[0m", node_name.c_str());
+                }
+            } else if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+                // If the node is active, try to deactivate and then reactivate
+                if (change_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE)) {
+                    RCLCPP_WARN(this->get_logger(), "\033[1;33m[%s] Node deactivated due to missed heartbeat. Attempting to reactivate.\033[0m", node_name.c_str());
+                    // After deactivation, try to activate again
+                    uint8_t new_state = get_node_state(node_name);
+                    if (new_state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+                        if (change_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE)) {
+                            RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Node re-activated successfully after deactivation.\033[0m", node_name.c_str());
+                        } else {
+                            RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to re-activate node after deactivation.\033[0m", node_name.c_str());
+                        }
+                    }
+                } else {
+                    RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to deactivate node.\033[0m", node_name.c_str());
+                }
+            }
         } else {
             RCLCPP_WARN(this->get_logger(), "Could not determine current state for node %s", node_name.c_str());
         }
     }
-    
+
     // Called when a heartbeat is received
     void heartbeat_callback(const std_msgs::msg::String::SharedPtr msg, const std::string &node_name) {
         auto it = data_map_.find(node_name);
