@@ -26,12 +26,14 @@ struct NodeData {
 class LifeManager : public rclcpp::Node {
 public:
     LifeManager() : rclcpp::Node("life_manager") {
+        client_cb_group_ = this->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
         declare_and_get_parameters();
         initialize_nodes();
         RCLCPP_INFO(this->get_logger(), "Life Manager started.");
     }
 
 private:
+    rclcpp::CallbackGroup::SharedPtr client_cb_group_;
     std::unordered_map<std::string, NodeData> data_map_;
     std::vector<std::string> nodes_;
     int k_;
@@ -52,8 +54,16 @@ private:
             auto timer = create_heartbeat_timer(node_name, threshold);
 
             // Create service clients
-            auto change_state_client = this->create_client<lifecycle_msgs::srv::ChangeState>("/" + node_name + "/change_state");
-            auto get_state_client = this->create_client<lifecycle_msgs::srv::GetState>("/" + node_name + "/get_state");
+            auto change_state_client = this->create_client<lifecycle_msgs::srv::ChangeState>(
+                node_name + "/change_state",
+                rmw_qos_profile_services_default,
+                client_cb_group_
+            );
+            auto get_state_client = this->create_client<lifecycle_msgs::srv::GetState>(
+                node_name + "/get_state",
+                rmw_qos_profile_services_default,
+                client_cb_group_
+            );
 
             data_map_[node_name] = {threshold, sub, timer, change_state_client, get_state_client};
 
@@ -88,9 +98,28 @@ private:
             std::chrono::duration<double>(threshold),
             [this, node_name]() {
                 this->heartbeat_timeout(node_name);
-            }
+            },
+            client_cb_group_
         );
         return timer;
+    }
+
+    // Helper function to wait for async service results
+    template<typename FutureT, typename WaitTimeT>
+    std::future_status wait_for_result(
+        FutureT & future,
+        WaitTimeT time_to_wait)
+    {
+        auto end = std::chrono::steady_clock::now() + time_to_wait;
+        std::chrono::milliseconds wait_period(100);
+        std::future_status status = std::future_status::timeout;
+        do {
+            auto now = std::chrono::steady_clock::now();
+            auto time_left = end - now;
+            if (time_left <= std::chrono::seconds(0)) {break;}
+            status = future.wait_for((time_left < wait_period) ? time_left : wait_period);
+        } while (rclcpp::ok() && status != std::future_status::ready);
+        return status;
     }
 
     uint8_t get_node_state(const std::string &node_name) {
@@ -100,6 +129,8 @@ private:
             return lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN;
         }
         auto client = it->second.get_state_client;
+        //print client name
+        RCLCPP_INFO(this->get_logger(), "Client name: %s", client->get_service_name());
     
         if (!client->wait_for_service(3s)) {
             RCLCPP_ERROR(this->get_logger(), "Service %s not available.", client->get_service_name());
@@ -107,17 +138,15 @@ private:
         }
     
         auto request = std::make_shared<lifecycle_msgs::srv::GetState::Request>();
-        auto future_and_id = client->async_send_request(request);
-        auto &future_result = future_and_id.future;
+        auto future_result = client->async_send_request(request).future.share();        
         auto future_status = wait_for_result(future_result, 3s);
-        RCLCPP_INFO(this->get_logger(), "Future status: %u", static_cast<unsigned int>(future_status));
 
         if (future_status != std::future_status::ready) {
-            client->remove_pending_request(future_and_id);
-            RCLCPP_ERROR(this->get_logger(), "Server time out while getting current state for node %s", node_name.c_str());
+            RCLCPP_ERROR(this->get_logger(), "\033[1;33mServer time out while changing state for node %s\033[0m", node_name.c_str());
             return lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN;
         }
 
+        // Get the result from the shared_future
         if (future_result.get()) {
             RCLCPP_INFO(this->get_logger(), "[%s] Current state: %u (%s)", node_name.c_str(),
                         future_result.get()->current_state.id,
@@ -129,54 +158,44 @@ private:
         }
     }
 
-    void change_state(const std::string &node_name, uint8_t transition) {
+    bool change_state(const std::string &node_name, uint8_t transition) {
         auto it = data_map_.find(node_name);
         if (it == data_map_.end() || !it->second.change_state_client) {
             RCLCPP_ERROR(this->get_logger(), "No change_state client for node %s", node_name.c_str());
-            return;
+            return false;
         }
         auto client = it->second.change_state_client;
+        
         if (!client->wait_for_service(3s)) {
             RCLCPP_ERROR(this->get_logger(), "Service %s not available.", client->get_service_name());
-            return;
+            return false;
         }
+        
         auto request = std::make_shared<lifecycle_msgs::srv::ChangeState::Request>();
         request->transition.id = transition;
-        client->async_send_request(request,
-            [this, node_name, transition](rclcpp::Client<lifecycle_msgs::srv::ChangeState>::SharedFuture future) {
-                try {
-                    auto result = future.get();
-                    if (result->success) {
-                        RCLCPP_INFO(this->get_logger(), "[%s] Successfully transitioned (%u).", node_name.c_str(), transition);
-                    } else {
-                        RCLCPP_ERROR(this->get_logger(), "[%s] Failed to transition (%u).", node_name.c_str(), transition);
-                    }
-                } catch (const std::exception &e) {
-                    RCLCPP_ERROR(this->get_logger(), "[%s] Service call failed: %s", node_name.c_str(), e.what());
-                }
-            }
-        );
-    }
+        
+        // Use shared_future with .share() to properly wait for the result
+        auto future_result = client->async_send_request(request).future.share();
+        
+        // Wait for the result with the helper function
+        auto future_status = wait_for_result(future_result, 3s);
 
-    template<typename FutureT, typename WaitTimeT>
-    std::future_status
-    wait_for_result(
-    FutureT & future,
-    WaitTimeT time_to_wait)
-    {
-        auto end = std::chrono::steady_clock::now() + time_to_wait;
-        std::chrono::milliseconds wait_period(100);
-        std::future_status status = std::future_status::timeout;
-        do {
-            auto now = std::chrono::steady_clock::now();
-            auto time_left = end - now;
-            if (time_left <= std::chrono::seconds(0)) {break;}
-            status = future.wait_for((time_left < wait_period) ? time_left : wait_period);
-            RCLCPP_INFO(this->get_logger(), "Status: %u", static_cast<unsigned int>(status));
-        } while (rclcpp::ok() && status != std::future_status::ready);
-        return status;
-    }
+        if (future_status != std::future_status::ready) {
+            RCLCPP_ERROR(this->get_logger(), "\033[1;33mServer time out while changing state for node %s\033[0m", node_name.c_str());
+            return false;
+        }
 
+        // Get the result from the shared_future
+        if (future_result.get()->success) {
+            RCLCPP_INFO(this->get_logger(), "[%s] Successfully transitioned (%u).", 
+                       node_name.c_str(), transition);
+            return true;
+        } else {
+            RCLCPP_ERROR(this->get_logger(), "[%s] Failed to transition (%u).", 
+                        node_name.c_str(), transition);
+            return false;
+        }
+    }
 
     // Called when a heartbeat is missed
     void heartbeat_timeout(const std::string &node_name) {
@@ -185,10 +204,12 @@ private:
         uint8_t state = get_node_state(node_name);
         if (state != lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN) {
             RCLCPP_INFO(this->get_logger(), "Current state for node %s: %u", node_name.c_str(), state);
+            
         } else {
             RCLCPP_WARN(this->get_logger(), "Could not determine current state for node %s", node_name.c_str());
         }
     }
+    
     // Called when a heartbeat is received
     void heartbeat_callback(const std_msgs::msg::String::SharedPtr msg, const std::string &node_name) {
         auto it = data_map_.find(node_name);
@@ -204,7 +225,7 @@ private:
 
 int main(int argc, char **argv) {
     rclcpp::init(argc, argv);
-    rclcpp::executors::SingleThreadedExecutor executor;
+    rclcpp::executors::MultiThreadedExecutor executor;
     auto life_manager_node = std::make_shared<LifeManager>();
     executor.add_node(life_manager_node);
     RCLCPP_INFO(rclcpp::get_logger("main"), "Spinning LifeManager node.");
