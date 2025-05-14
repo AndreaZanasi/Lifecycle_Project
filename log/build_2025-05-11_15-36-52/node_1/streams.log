@@ -1,0 +1,10 @@
+[0.033s] Invoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --build /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1 -- -j4 -l4
+[0.174s] [100%] Built target node_1_exe
+[0.216s] Invoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --build /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1 -- -j4 -l4
+[0.237s] Invoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --install /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1
+[0.259s] -- Install configuration: ""
+[0.259s] -- Up-to-date: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/launch
+[0.260s] -- Up-to-date: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/config
+[0.260s] -- Up-to-date: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/config/params.yaml
+[0.260s] -- Installing: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/package.dsv
+[0.265s] Invoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --install /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1

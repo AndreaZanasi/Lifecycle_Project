@@ -1,0 +1,8 @@
+source;share/life_manager/hook/cmake_prefix_path.ps1
+source;share/life_manager/hook/cmake_prefix_path.dsv
+source;share/life_manager/hook/cmake_prefix_path.sh
+source;share/life_manager/local_setup.bash
+source;share/life_manager/local_setup.dsv
+source;share/life_manager/local_setup.ps1
+source;share/life_manager/local_setup.sh
+source;share/life_manager/local_setup.zsh

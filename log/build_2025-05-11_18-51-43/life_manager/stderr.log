@@ -1,0 +1,5 @@
+[01m[K/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager/src/life_manager.cpp:[m[K In member function ‘[01m[Kvoid LifeManager::declare_and_get_parameters()[m[K’:
+[01m[K/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager/src/life_manager.cpp:39:58:[m[K [01;35m[Kwarning: [m[Kconverting to ‘[01m[Kconst ParameterDescriptor[m[K’ {aka ‘[01m[Kconst rcl_interfaces::msg::ParameterDescriptor_<std::allocator<void> >[m[K’} from initializer list would use explicit constructor ‘[01m[Krcl_interfaces::msg::ParameterDescriptor_<ContainerAllocator>::ParameterDescriptor_(rosidl_runtime_cpp::MessageInitialization) [with ContainerAllocator = std::allocator<void>][m[K’
+   39 |         [01;35m[Kthis->declare_parameter<std::vector<std::string>>("nodes", {})[m[K;
+      |         [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~[m[K
+[01m[K/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager/src/life_manager.cpp:39:58:[m[K [01;36m[Knote: [m[Kin C++11 and above a default constructor can be explicit

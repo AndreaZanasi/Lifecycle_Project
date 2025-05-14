@@ -1,0 +1,4 @@
+[01m[K/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager/src/life_manager.cpp:[m[K In member function ‘[01m[Kvoid LifeManager::heartbeat_callback(std_msgs::msg::String_<std::allocator<void> >::SharedPtr, const string&)[m[K’:
+[01m[K/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager/src/life_manager.cpp:81:66:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kmsg[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+   81 |   void heartbeat_callback([01;35m[Kconst std_msgs::msg::String::SharedPtr msg[m[K,
+      |                           [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~[m[K

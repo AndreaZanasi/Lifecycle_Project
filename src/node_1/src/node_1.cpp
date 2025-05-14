@@ -1,0 +1,152 @@
+#include <chrono>
+#include <memory>
+#include <string>
+
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
+#include "rclcpp_lifecycle/lifecycle_publisher.hpp"
+#include "std_msgs/msg/string.hpp"
+#include "rclcpp/qos.hpp"
+
+using namespace std::chrono_literals;
+
+// Node1: Lifecycle node that periodically publishes heartbeat messages
+class Node1 : public rclcpp_lifecycle::LifecycleNode
+{
+public:
+  explicit Node1(const std::string & node_name, bool intra_process_comms = false)
+  : rclcpp_lifecycle::LifecycleNode(
+      node_name,
+      rclcpp::NodeOptions().use_intra_process_comms(intra_process_comms))
+  {
+    declare_parameters();
+  }
+
+  // Configure lifecycle: setup publisher and timer
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_configure(const rclcpp_lifecycle::State &) override
+  {
+    rclcpp::QoS qos_profile = rclcpp::QoS(rclcpp::KeepLast(10));
+    load_parameters();
+
+    RCLCPP_INFO(get_logger(), "Configuring node: %s, period: %ld ms", node_name_.c_str(), period_.count());
+
+    pub_ = this->create_publisher<std_msgs::msg::String>("/heartbeat/" + node_name_, qos_profile);
+    timer_ = this->create_wall_timer(period_, std::bind(&Node1::publish_heartbeat, this));
+    return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
+  }
+
+  // Activate lifecycle: activate publisher
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_activate(const rclcpp_lifecycle::State &) override
+  {
+    RCLCPP_INFO(get_logger(), "Activating node: %s", node_name_.c_str());
+    pub_->on_activate();
+    logic_running_ = true;
+    logic_thread_ = std::thread(&Node1::logic_function, this);
+    return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
+  }
+
+  // Deactivate lifecycle: deactivate publisher
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_deactivate(const rclcpp_lifecycle::State &) override
+  {
+    RCLCPP_INFO(get_logger(), "Deactivating node: %s", node_name_.c_str());
+    pub_->on_deactivate();
+    logic_running_ = false;
+    if (logic_thread_.joinable()) {
+      logic_thread_.join();
+    }
+    return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
+  }
+
+  // Cleanup lifecycle: release resources
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_cleanup(const rclcpp_lifecycle::State &) override
+  {
+    RCLCPP_INFO(get_logger(), "Cleaning up node: %s", node_name_.c_str());
+    timer_.reset();
+    pub_.reset();
+    return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
+  }
+
+  // Shutdown lifecycle: release resources
+  rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
+  on_shutdown(const rclcpp_lifecycle::State & state) override
+  {
+    RCLCPP_INFO(get_logger(), "Shutting down node: %s from state %s", node_name_.c_str(), state.label().c_str());
+    timer_.reset();
+    pub_.reset();
+    return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
+  }
+
+private:
+  // Declare node parameters with default values
+  void declare_parameters() {
+    this->declare_parameter<std::string>("node_name", "node_1");
+    this->declare_parameter<int>("period", 1000); // ms
+  }
+
+  // Load parameters from the parameter server
+  void load_parameters() {
+    node_name_ = this->get_parameter("node_name").as_string();
+    int period_ms = this->get_parameter("period").as_int();
+    period_ = std::chrono::milliseconds(period_ms);
+  }
+
+  // Publish heartbeat message if publisher is activated
+  void publish_heartbeat()
+  {
+    if (!pub_ || !pub_->is_activated()) {
+      return;
+    }
+    auto msg = std::make_unique<std_msgs::msg::String>();
+    msg->data = node_name_ + " heartbeat";
+    RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", msg->data.c_str());
+    pub_->publish(std::move(msg));
+  }
+
+  void logic_function()
+  {
+    int cycle = 0;
+    while (logic_running_) {
+      std::this_thread::sleep_for(std::chrono::seconds(2));
+      ++cycle;
+      RCLCPP_INFO(this->get_logger(), "Logic cycle: %d", cycle);
+      if (cycle == 4) {
+        try {
+          int a = 1;
+          int b = 0;
+          if (b == 0) {
+            throw std::runtime_error("Division by zero simulated");
+          }
+          int c = a / b;
+          (void)c;
+        } catch (const std::exception &e) {
+          RCLCPP_ERROR(this->get_logger(), "Exception in logic: %s. Transitioning to deactivate.", e.what());
+          // Request transition to deactivate
+          this->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE);
+          break;
+        }
+      }
+    }
+  }
+
+  std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::String>> pub_;
+  std::shared_ptr<rclcpp::TimerBase> timer_;
+  std::string node_name_;
+  std::chrono::milliseconds period_;
+  std::atomic<bool> logic_running_{false};
+  std::thread logic_thread_;
+};
+
+int main(int argc, char * argv[])
+{
+  rclcpp::init(argc, argv);
+  rclcpp::executors::MultiThreadedExecutor executor;
+  auto node = std::make_shared<Node1>("node_1");
+  executor.add_node(node->get_node_base_interface());
+  executor.spin();
+  rclcpp::shutdown();
+  return 0;
+}

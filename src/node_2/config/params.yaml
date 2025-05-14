@@ -1,0 +1,4 @@
+node_2:
+  ros__parameters:
+    node_name: "node_2"
+    period: 500  # ms

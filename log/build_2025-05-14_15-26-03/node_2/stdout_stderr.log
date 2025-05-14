@@ -1,0 +1,7 @@
+[ 50%] [32mBuilding CXX object CMakeFiles/node_2_exe.dir/src/node_2.cpp.o[0m
+[100%] [32m[1mLinking CXX executable node_2_exe[0m
+[100%] Built target node_2_exe
+-- Install configuration: ""
+-- Up-to-date: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/launch
+-- Up-to-date: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/config
+-- Installing: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/package.dsv

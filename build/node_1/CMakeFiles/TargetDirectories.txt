@@ -1,0 +1,10 @@
+/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1/CMakeFiles/uninstall.dir
+/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1/CMakeFiles/node_1_uninstall.dir
+/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1/CMakeFiles/node_1_exe.dir
+/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1/CMakeFiles/test.dir
+/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1/CMakeFiles/edit_cache.dir
+/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1/CMakeFiles/rebuild_cache.dir
+/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1/CMakeFiles/list_install_components.dir
+/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1/CMakeFiles/install.dir
+/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1/CMakeFiles/install/local.dir
+/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1/CMakeFiles/install/strip.dir

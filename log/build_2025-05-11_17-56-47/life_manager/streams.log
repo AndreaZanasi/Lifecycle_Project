@@ -1,0 +1,16 @@
+[0.084s] Invoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --build /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager -- -j4 -l4
+[0.244s] [35m[1mConsolidate compiler generated dependencies of target life_manager_exe[0m
+[0.309s] [ 50%] [32mBuilding CXX object CMakeFiles/life_manager_exe.dir/src/life_manager.cpp.o[0m
+[4.670s] [01m[K/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager/src/life_manager.cpp:[m[K In member function ‘[01m[Kvoid LifeManager::declare_and_get_parameters()[m[K’:
+[4.671s] [01m[K/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager/src/life_manager.cpp:42:54:[m[K [01;35m[Kwarning: [m[Kconverting to ‘[01m[Kconst ParameterDescriptor[m[K’ {aka ‘[01m[Kconst rcl_interfaces::msg::ParameterDescriptor_<std::allocator<void> >[m[K’} from initializer list would use explicit constructor ‘[01m[Krcl_interfaces::msg::ParameterDescriptor_<ContainerAllocator>::ParameterDescriptor_(rosidl_runtime_cpp::MessageInitialization) [with ContainerAllocator = std::allocator<void>][m[K’
+[4.671s]    42 |     [01;35m[Kthis->declare_parameter<std::vector<std::string>>("nodes", {})[m[K;
+[4.671s]       |     [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~[m[K
+[4.671s] [01m[K/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager/src/life_manager.cpp:42:54:[m[K [01;36m[Knote: [m[Kin C++11 and above a default constructor can be explicit
+[15.692s] [100%] [32m[1mLinking CXX executable life_manager_exe[0m
+[16.632s] [100%] Built target life_manager_exe
+[16.650s] Invoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --build /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager -- -j4 -l4
+[16.653s] Invoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --install /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager
+[16.662s] -- Install configuration: ""
+[16.662s] -- Up-to-date: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/launch
+[16.663s] -- Installing: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/package.dsv
+[16.667s] Invoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --install /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager

@@ -1,0 +1,9 @@
+[0.074s] Invoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --build /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager -- -j4 -l4
+[0.217s] [35m[1mConsolidate compiler generated dependencies of target life_manager_exe[0m
+[0.299s] [100%] Built target life_manager_exe
+[0.340s] Invoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --build /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager -- -j4 -l4
+[0.341s] Invoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --install /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager
+[0.372s] -- Install configuration: ""
+[0.373s] -- Up-to-date: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/launch
+[0.373s] -- Installing: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/package.dsv
+[0.440s] Invoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --install /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager

@@ -1,0 +1,9 @@
+life_manager:
+  ros__parameters:
+    k: 3
+    nodes: ["node_1", "node_2"]
+    node_config:
+      node1:
+        period: 1000  # ms
+      node2:
+        period: 500  # ms

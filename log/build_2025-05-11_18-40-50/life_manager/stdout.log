@@ -1,0 +1,7 @@
+[35m[1mConsolidate compiler generated dependencies of target life_manager_exe[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/life_manager_exe.dir/src/life_manager.cpp.o[0m
+[100%] [32m[1mLinking CXX executable life_manager_exe[0m
+[100%] Built target life_manager_exe
+-- Install configuration: ""
+-- Up-to-date: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/launch
+-- Installing: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/package.dsv

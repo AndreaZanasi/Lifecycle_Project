@@ -1,0 +1,4 @@
+source;share/life_manager/local_setup.bash
+source;share/life_manager/local_setup.dsv
+source;share/life_manager/local_setup.sh
+source;share/life_manager/local_setup.zsh

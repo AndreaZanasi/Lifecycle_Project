@@ -1,0 +1,270 @@
+[0.160s] [34mcolcon[0m [1;30mDEBUG[0m [32mCommand line arguments: ['/usr/bin/colcon', 'build'][0m
+[0.161s] [34mcolcon[0m [1;30mDEBUG[0m [32mParsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=False, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=4, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x7b5aeed488b0>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7b5aeed48340>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7b5aeed48340>>, mixin_verb=('build',))[0m
+[0.453s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(colcon_meta) check parameters
+[0.453s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) check parameters
+[0.453s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) check parameters
+[0.453s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) check parameters
+[0.453s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(colcon_meta) discover
+[0.454s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) discover
+[0.454s] [34mcolcon.colcon_core.package_discovery[0m [1;30mINFO[0m Crawling recursively for packages in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager'
+[0.454s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.454s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ignore'
+[0.454s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ignore_ament_install'
+[0.454s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['colcon_pkg']
+[0.454s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'colcon_pkg'
+[0.455s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['colcon_meta']
+[0.455s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'colcon_meta'
+[0.455s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['ros']
+[0.455s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'ros'
+[0.516s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['cmake', 'python']
+[0.516s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'cmake'
+[0.516s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'python'
+[0.516s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extensions ['python_setup_py']
+[0.516s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(.) by extension 'python_setup_py'
+[0.516s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.516s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) by extension 'ignore'
+[0.516s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(build) ignored
+[0.517s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.517s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) by extension 'ignore'
+[0.517s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(install) ignored
+[0.517s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.517s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) by extension 'ignore'
+[0.517s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(log) ignored
+[0.517s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['ignore', 'ignore_ament_install']
+[0.518s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'ignore'
+[0.518s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'ignore_ament_install'
+[0.518s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['colcon_pkg']
+[0.518s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'colcon_pkg'
+[0.518s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['colcon_meta']
+[0.518s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'colcon_meta'
+[0.518s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['ros']
+[0.518s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'ros'
+[0.518s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['cmake', 'python']
+[0.518s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'cmake'
+[0.518s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'python'
+[0.518s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extensions ['python_setup_py']
+[0.519s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src) by extension 'python_setup_py'
+[0.519s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/life_manager) by extensions ['ignore', 'ignore_ament_install']
+[0.519s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/life_manager) by extension 'ignore'
+[0.519s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/life_manager) by extension 'ignore_ament_install'
+[0.519s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/life_manager) by extensions ['colcon_pkg']
+[0.519s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/life_manager) by extension 'colcon_pkg'
+[0.519s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/life_manager) by extensions ['colcon_meta']
+[0.519s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/life_manager) by extension 'colcon_meta'
+[0.519s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/life_manager) by extensions ['ros']
+[0.519s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/life_manager) by extension 'ros'
+[0.523s] [34mcolcon.colcon_core.package_identification[0m [1;30mDEBUG[0m [32mPackage 'src/life_manager' with type 'ros.ament_cmake' and name 'life_manager'[0m
+[0.523s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_1) by extensions ['ignore', 'ignore_ament_install']
+[0.523s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_1) by extension 'ignore'
+[0.524s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_1) by extension 'ignore_ament_install'
+[0.524s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_1) by extensions ['colcon_pkg']
+[0.524s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_1) by extension 'colcon_pkg'
+[0.524s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_1) by extensions ['colcon_meta']
+[0.524s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_1) by extension 'colcon_meta'
+[0.524s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_1) by extensions ['ros']
+[0.524s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_1) by extension 'ros'
+[0.526s] [34mcolcon.colcon_core.package_identification[0m [1;30mDEBUG[0m [32mPackage 'src/node_1' with type 'ros.ament_cmake' and name 'node_1'[0m
+[0.526s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_2) by extensions ['ignore', 'ignore_ament_install']
+[0.526s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_2) by extension 'ignore'
+[0.526s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_2) by extension 'ignore_ament_install'
+[0.526s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_2) by extensions ['colcon_pkg']
+[0.526s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_2) by extension 'colcon_pkg'
+[0.526s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_2) by extensions ['colcon_meta']
+[0.526s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_2) by extension 'colcon_meta'
+[0.526s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_2) by extensions ['ros']
+[0.526s] [34mcolcon.colcon_core.package_identification[0m [1;30mLevel 1[0m _identify(src/node_2) by extension 'ros'
+[0.527s] [34mcolcon.colcon_core.package_identification[0m [1;30mDEBUG[0m [32mPackage 'src/node_2' with type 'ros.ament_cmake' and name 'node_2'[0m
+[0.527s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(recursive) using defaults
+[0.527s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) discover
+[0.528s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(ignore) using defaults
+[0.528s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) discover
+[0.528s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(path) using defaults
+[0.555s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(prefix_path) check parameters
+[0.555s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(prefix_path) discover
+[0.558s] [34mcolcon.colcon_installed_package_information.package_discovery[0m [1;30mDEBUG[0m [32mFound 1 installed packages in /home/andreazanasi/Desktop/MMR/lifecycle/install[0m
+[0.559s] [34mcolcon.colcon_installed_package_information.package_discovery[0m [1;30mDEBUG[0m [32mFound 8 installed packages in /home/andreazanasi/Desktop/MMR/mmr-kria-drive/install[0m
+[0.561s] [34mcolcon.colcon_installed_package_information.package_discovery[0m [1;30mDEBUG[0m [32mFound 187 installed packages in /opt/ros/humble[0m
+[0.562s] [34mcolcon.colcon_core.package_discovery[0m [1;30mLevel 1[0m discover_packages(prefix_path) using defaults
+[0.598s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'life_manager' build argument 'cmake_args' from command line to 'None'
+[0.599s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'life_manager' build argument 'cmake_target' from command line to 'None'
+[0.599s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'life_manager' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.599s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'life_manager' build argument 'cmake_clean_cache' from command line to 'False'
+[0.599s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'life_manager' build argument 'cmake_clean_first' from command line to 'False'
+[0.599s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'life_manager' build argument 'cmake_force_configure' from command line to 'False'
+[0.599s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'life_manager' build argument 'ament_cmake_args' from command line to 'None'
+[0.599s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'life_manager' build argument 'catkin_cmake_args' from command line to 'None'
+[0.599s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'life_manager' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.599s] [34mcolcon.colcon_core.verb[0m [1;30mDEBUG[0m [32mBuilding package 'life_manager' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager', 'merge_install': False, 'path': '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager', 'symlink_install': False, 'test_result_base': None}[0m
+[0.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_1' build argument 'cmake_args' from command line to 'None'
+[0.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_1' build argument 'cmake_target' from command line to 'None'
+[0.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_1' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_1' build argument 'cmake_clean_cache' from command line to 'False'
+[0.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_1' build argument 'cmake_clean_first' from command line to 'False'
+[0.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_1' build argument 'cmake_force_configure' from command line to 'False'
+[0.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_1' build argument 'ament_cmake_args' from command line to 'None'
+[0.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_1' build argument 'catkin_cmake_args' from command line to 'None'
+[0.600s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_1' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.600s] [34mcolcon.colcon_core.verb[0m [1;30mDEBUG[0m [32mBuilding package 'node_1' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1', 'merge_install': False, 'path': '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/node_1', 'symlink_install': False, 'test_result_base': None}[0m
+[0.601s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_2' build argument 'cmake_args' from command line to 'None'
+[0.601s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_2' build argument 'cmake_target' from command line to 'None'
+[0.601s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_2' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.601s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_2' build argument 'cmake_clean_cache' from command line to 'False'
+[0.601s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_2' build argument 'cmake_clean_first' from command line to 'False'
+[0.601s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_2' build argument 'cmake_force_configure' from command line to 'False'
+[0.601s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_2' build argument 'ament_cmake_args' from command line to 'None'
+[0.601s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_2' build argument 'catkin_cmake_args' from command line to 'None'
+[0.601s] [34mcolcon.colcon_core.verb[0m [1;30mLevel 5[0m set package 'node_2' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.601s] [34mcolcon.colcon_core.verb[0m [1;30mDEBUG[0m [32mBuilding package 'node_2' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_2', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2', 'merge_install': False, 'path': '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/node_2', 'symlink_install': False, 'test_result_base': None}[0m
+[0.601s] [34mcolcon.colcon_core.executor[0m [1;30mINFO[0m Executing jobs using 'parallel' executor
+[0.602s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mrun_until_complete[0m
+[0.603s] [34mcolcon.colcon_ros.task.ament_cmake.build[0m [1;30mINFO[0m Building ROS package in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager' with build type 'ament_cmake'
+[0.603s] [34mcolcon.colcon_cmake.task.cmake.build[0m [1;30mINFO[0m Building CMake package in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager'
+[0.607s] [34mcolcon.colcon_core.plugin_system[0m [1;30mINFO[0m Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.607s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.607s] [34mcolcon.colcon_core.shell[0m [1;30mDEBUG[0m [32mSkip shell extension 'dsv' for command environment[0m
+[0.613s] [34mcolcon.colcon_ros.task.ament_cmake.build[0m [1;30mINFO[0m Building ROS package in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/node_1' with build type 'ament_cmake'
+[0.613s] [34mcolcon.colcon_cmake.task.cmake.build[0m [1;30mINFO[0m Building CMake package in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/node_1'
+[0.614s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.614s] [34mcolcon.colcon_core.shell[0m [1;30mDEBUG[0m [32mSkip shell extension 'dsv' for command environment[0m
+[0.619s] [34mcolcon.colcon_ros.task.ament_cmake.build[0m [1;30mINFO[0m Building ROS package in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/node_2' with build type 'ament_cmake'
+[0.620s] [34mcolcon.colcon_cmake.task.cmake.build[0m [1;30mINFO[0m Building CMake package in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/node_2'
+[0.620s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.620s] [34mcolcon.colcon_core.shell[0m [1;30mDEBUG[0m [32mSkip shell extension 'dsv' for command environment[0m
+[0.634s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --build /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager -- -j4 -l4[0m
+[0.640s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --build /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1 -- -j4 -l4[0m
+[0.653s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --build /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_2 -- -j4 -l4[0m
+[0.801s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --build /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager -- -j4 -l4[0m
+[0.857s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --install /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager[0m
+[0.890s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_environment_scripts_only(life_manager)
+[0.901s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager' for CMake module files
+[0.911s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager' for CMake config files
+[0.911s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('life_manager', 'cmake_prefix_path')
+[0.912s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/hook/cmake_prefix_path.ps1'
+[0.902s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --install /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager[0m
+[0.923s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/hook/cmake_prefix_path.dsv'
+[0.927s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/hook/cmake_prefix_path.sh'
+[0.934s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/lib'
+[0.934s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/bin'
+[0.934s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/lib/pkgconfig/life_manager.pc'
+[0.935s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/lib/python3.10/site-packages'
+[0.935s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/bin'
+[0.941s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/package.ps1'
+[0.942s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package descriptor '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/package.dsv'
+[0.952s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/package.sh'
+[0.954s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/package.bash'
+[0.962s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/package.zsh'
+[0.963s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_file_with_runtime_dependencies(/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/colcon-core/packages/life_manager)
+[0.971s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_environment_scripts_only(life_manager)
+[0.971s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager' for CMake module files
+[0.972s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager' for CMake config files
+[0.978s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('life_manager', 'cmake_prefix_path')
+[0.978s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/hook/cmake_prefix_path.ps1'
+[0.979s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/hook/cmake_prefix_path.dsv'
+[0.980s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/hook/cmake_prefix_path.sh'
+[0.988s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/lib'
+[0.989s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/bin'
+[0.989s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/lib/pkgconfig/life_manager.pc'
+[0.989s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/lib/python3.10/site-packages'
+[0.990s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/bin'
+[0.990s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/package.ps1'
+[0.997s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package descriptor '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/package.dsv'
+[0.999s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/package.sh'
+[1.004s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/package.bash'
+[1.005s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/package.zsh'
+[1.012s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_file_with_runtime_dependencies(/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/colcon-core/packages/life_manager)
+[7.752s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_2' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --build /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_2 -- -j4 -l4[0m
+[7.753s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --install /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_2[0m
+[7.779s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_environment_scripts_only(node_2)
+[7.780s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2' for CMake module files
+[7.781s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2' for CMake config files
+[7.782s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('node_2', 'cmake_prefix_path')
+[7.782s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/hook/cmake_prefix_path.ps1'
+[7.780s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_2' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --install /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_2[0m
+[7.784s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/hook/cmake_prefix_path.dsv'
+[7.784s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/hook/cmake_prefix_path.sh'
+[7.786s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/lib'
+[7.786s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/bin'
+[7.786s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/lib/pkgconfig/node_2.pc'
+[7.787s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/lib/python3.10/site-packages'
+[7.787s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/bin'
+[7.789s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/package.ps1'
+[7.791s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package descriptor '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/package.dsv'
+[7.793s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/package.sh'
+[7.794s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/package.bash'
+[7.795s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/package.zsh'
+[7.796s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_file_with_runtime_dependencies(/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/colcon-core/packages/node_2)
+[7.797s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_environment_scripts_only(node_2)
+[7.798s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2' for CMake module files
+[7.799s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2' for CMake config files
+[7.799s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('node_2', 'cmake_prefix_path')
+[7.800s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/hook/cmake_prefix_path.ps1'
+[7.801s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/hook/cmake_prefix_path.dsv'
+[7.802s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/hook/cmake_prefix_path.sh'
+[7.803s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/lib'
+[7.803s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/bin'
+[7.803s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/lib/pkgconfig/node_2.pc'
+[7.804s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/lib/python3.10/site-packages'
+[7.804s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/bin'
+[7.805s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/package.ps1'
+[7.806s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package descriptor '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/package.dsv'
+[7.807s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/package.sh'
+[7.810s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/package.bash'
+[7.811s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/node_2/package.zsh'
+[7.812s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_file_with_runtime_dependencies(/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_2/share/colcon-core/packages/node_2)
+[7.816s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --build /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1 -- -j4 -l4[0m
+[7.818s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --install /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1[0m
+[7.841s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_environment_scripts_only(node_1)
+[7.841s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1' for CMake module files
+[7.843s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1' for CMake config files
+[7.844s] [34mcolcon.colcon_core.event_handler.log_command[0m [1;30mDEBUG[0m [32mInvoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --install /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_1[0m
+[7.844s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('node_1', 'cmake_prefix_path')
+[7.845s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/hook/cmake_prefix_path.ps1'
+[7.845s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/hook/cmake_prefix_path.dsv'
+[7.846s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/hook/cmake_prefix_path.sh'
+[7.847s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/lib'
+[7.847s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/bin'
+[7.848s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/lib/pkgconfig/node_1.pc'
+[7.848s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/lib/python3.10/site-packages'
+[7.848s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/bin'
+[7.849s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/package.ps1'
+[7.850s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package descriptor '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/package.dsv'
+[7.851s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/package.sh'
+[7.852s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/package.bash'
+[7.853s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/package.zsh'
+[7.853s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_file_with_runtime_dependencies(/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/colcon-core/packages/node_1)
+[7.855s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_environment_scripts_only(node_1)
+[7.855s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1' for CMake module files
+[7.856s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1' for CMake config files
+[7.856s] [34mcolcon.colcon_core.shell[0m [1;30mLevel 1[0m create_environment_hook('node_1', 'cmake_prefix_path')
+[7.857s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/hook/cmake_prefix_path.ps1'
+[7.858s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment descriptor '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/hook/cmake_prefix_path.dsv'
+[7.859s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating environment hook '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/hook/cmake_prefix_path.sh'
+[7.860s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/lib'
+[7.860s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/bin'
+[7.861s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/lib/pkgconfig/node_1.pc'
+[7.861s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/lib/python3.10/site-packages'
+[7.862s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m checking '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/bin'
+[7.863s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/package.ps1'
+[7.864s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package descriptor '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/package.dsv'
+[7.865s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/package.sh'
+[7.866s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/package.bash'
+[7.867s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating package script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/package.zsh'
+[7.868s] [34mcolcon.colcon_core.environment[0m [1;30mLevel 1[0m create_file_with_runtime_dependencies(/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/colcon-core/packages/node_1)
+[7.868s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mclosing loop[0m
+[7.869s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mloop closed[0m
+[7.870s] [34mcolcon.colcon_parallel_executor.executor.parallel[0m [1;30mDEBUG[0m [32mrun_until_complete finished with '0'[0m
+[7.870s] [34mcolcon.colcon_core.event_reactor[0m [1;30mDEBUG[0m [32mjoining thread[0m
+[7.880s] [34mcolcon.colcon_core.plugin_system[0m [1;30mINFO[0m Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[7.881s] [34mcolcon.colcon_core.plugin_system[0m [1;30mINFO[0m Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[7.881s] [34mcolcon.colcon_notification.desktop_notification[0m [1;30mINFO[0m Sending desktop notification using 'notify2'
+[7.903s] [34mcolcon.colcon_core.event_reactor[0m [1;30mDEBUG[0m [32mjoined thread[0m
+[7.904s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/local_setup.ps1'
+[7.906s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix util module '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/_local_setup_util_ps1.py'
+[7.911s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix chain script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/setup.ps1'
+[7.916s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/local_setup.sh'
+[7.917s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix util module '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/_local_setup_util_sh.py'
+[7.917s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix chain script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/setup.sh'
+[7.920s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/local_setup.bash'
+[7.921s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix chain script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/setup.bash'
+[7.924s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/local_setup.zsh'
+[7.925s] [34mcolcon.colcon_core.shell[0m [1;30mINFO[0m Creating prefix chain script '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/setup.zsh'

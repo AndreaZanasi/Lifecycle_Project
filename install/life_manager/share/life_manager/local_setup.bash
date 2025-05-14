@@ -1,0 +1,1 @@
+/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager/ament_cmake_environment_hooks/local_setup.bash

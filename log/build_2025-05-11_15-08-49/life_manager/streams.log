@@ -1,0 +1,60 @@
+[0.036s] Invoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager -DCMAKE_INSTALL_PREFIX=/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager
+[0.193s] -- The C compiler identification is GNU 11.4.0
+[0.332s] -- The CXX compiler identification is GNU 11.4.0
+[0.354s] -- Detecting C compiler ABI info
+[0.514s] -- Detecting C compiler ABI info - done
+[0.539s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.540s] -- Detecting C compile features
+[0.540s] -- Detecting C compile features - done
+[0.548s] -- Detecting CXX compiler ABI info
+[0.851s] -- Detecting CXX compiler ABI info - done
+[0.898s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.899s] -- Detecting CXX compile features
+[0.900s] -- Detecting CXX compile features - done
+[0.911s] -- Found ament_cmake: 1.3.11 (/opt/ros/humble/share/ament_cmake/cmake)
+[1.915s] -- Found Python3: /home/andreazanasi/.pyenv/shims/python3 (found version "3.10.12") found components: Interpreter 
+[2.232s] -- Found rclcpp: 16.0.12 (/opt/ros/humble/share/rclcpp/cmake)
+[2.357s] -- Found rosidl_generator_c: 3.1.6 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[2.376s] -- Found rosidl_adapter: 3.1.6 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[2.398s] -- Found rosidl_generator_cpp: 3.1.6 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[2.432s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[2.478s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[2.602s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[2.611s] -- Found rmw_fastrtps_cpp: 6.2.7 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[2.808s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.2")  
+[2.873s] -- Found FastRTPS: /opt/ros/humble/include  
+[2.952s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[2.979s] -- Looking for pthread.h
+[3.180s] -- Looking for pthread.h - found
+[3.181s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[3.419s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+[3.423s] -- Found Threads: TRUE  
+[3.591s] -- Found lifecycle_msgs: 1.2.1 (/opt/ros/humble/share/lifecycle_msgs/cmake)
+[3.624s] -- Found ament_lint_auto: 0.12.12 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[3.990s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[3.990s] -- Configured cppcheck include dirs: 
+[3.990s] -- Configured cppcheck exclude dirs and/or files: 
+[3.993s] -- Added test 'flake8' to check Python code syntax and style conventions
+[3.994s] -- Added test 'lint_cmake' to check CMake code style
+[3.996s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[3.998s] -- Added test 'uncrustify' to check C / C++ code style
+[3.999s] -- Configured uncrustify additional arguments: 
+[4.000s] -- Added test 'xmllint' to check XML markup files
+[4.004s] -- Configuring done
+[4.028s] -- Generating done
+[4.037s] -- Build files have been written to: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager
+[4.062s] Invoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager -DCMAKE_INSTALL_PREFIX=/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager
+[4.063s] Invoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --build /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager -- -j4 -l4
+[4.173s] [ 50%] [32mBuilding CXX object CMakeFiles/life_manager_exe.dir/src/life_manager.cpp.o[0m
+[10.291s] [01m[K/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager/src/life_manager.cpp:[m[K In member function ‘[01m[Kvoid LifeManager::heartbeat_callback(std_msgs::msg::String_<std::allocator<void> >::SharedPtr, const string&)[m[K’:
+[10.292s] [01m[K/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager/src/life_manager.cpp:82:66:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kmsg[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
+[10.292s]    82 |   void heartbeat_callback([01;35m[Kconst std_msgs::msg::String::SharedPtr msg[m[K,
+[10.293s]       |                           [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~[m[K
+[22.309s] [100%] [32m[1mLinking CXX executable life_manager_exe[0m
+[23.049s] [100%] Built target life_manager_exe
+[23.065s] Invoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --build /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager -- -j4 -l4
+[23.067s] Invoking command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --install /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager
+[23.078s] -- Install configuration: ""
+[23.078s] -- Up-to-date: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/launch
+[23.078s] -- Installing: /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/life_manager/share/life_manager/package.dsv
+[23.084s] Invoked command in '/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/andreazanasi/Desktop/MMR/mmr-kria-drive/install/clutch_plotter:/opt/ros/humble /usr/bin/cmake --install /home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager
