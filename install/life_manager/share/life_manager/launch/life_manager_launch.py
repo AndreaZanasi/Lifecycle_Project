@@ -1,1 +1,0 @@
-/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/life_manager/launch/life_manager_launch.py

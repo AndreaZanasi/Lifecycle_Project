@@ -1,1 +1,0 @@
-/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/life_manager/ament_cmake_core/life_managerConfig-version.cmake

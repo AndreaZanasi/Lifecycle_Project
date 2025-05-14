@@ -1,2 +1,0 @@
-/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/config/params.yaml
-/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/install/node_1/share/node_1/package.dsv

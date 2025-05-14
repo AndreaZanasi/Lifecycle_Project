@@ -1,1 +1,0 @@
-/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/build/node_2/ament_cmake_core/node_2Config-version.cmake

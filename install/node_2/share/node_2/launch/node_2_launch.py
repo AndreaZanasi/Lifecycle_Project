@@ -1,1 +1,0 @@
-/home/andreazanasi/Desktop/MMR/try_lifecycle_manager/src/node_2/launch/node_2_launch.py
