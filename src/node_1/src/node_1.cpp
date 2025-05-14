@@ -98,12 +98,23 @@ private:
     msg->data = node_name_ + " heartbeat";
     RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", msg->data.c_str());
     pub_->publish(std::move(msg));
+    heartbeat_count_++;
+    if (heartbeat_count_ % 10 == 0) {
+      RCLCPP_WARN(this->get_logger(), "\033[33mSimulating error: division by zero after 5 heartbeats.\033[0m");
+      try {
+        throw std::runtime_error("Simulated division by zero error");
+      } catch (const std::exception &e) {
+        RCLCPP_ERROR(this->get_logger(), "Caught exception: %s. Deactivating node.", e.what());
+        this->deactivate();
+      }
+    }
   }
 
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::String>> pub_;
   std::shared_ptr<rclcpp::TimerBase> timer_;
   std::string node_name_;
   std::chrono::milliseconds period_;
+  int heartbeat_count_ = 0;
 };
 
 int main(int argc, char * argv[])

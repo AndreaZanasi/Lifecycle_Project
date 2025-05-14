@@ -18,7 +18,7 @@ using namespace std::chrono_literals;
 struct NodeData {
     double threshold;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr sub;
-    rclcpp::TimerBase::SharedPtr timer; // watchdog
+    rclcpp::TimerBase::SharedPtr watchdog; // watchdog
     std::shared_ptr<rclcpp::Client<lifecycle_msgs::srv::ChangeState>> change_state_client;
     std::shared_ptr<rclcpp::Client<lifecycle_msgs::srv::GetState>> get_state_client;    
 };
@@ -41,7 +41,7 @@ private:
     // Declare and retrieve parameters from the parameter server
     void declare_and_get_parameters() {
         this->declare_parameter<int>("k", 3);
-        this->declare_parameter<std::vector<std::string>>("nodes", {});
+        this->declare_parameter<std::vector<std::string>>("nodes", {}, rcl_interfaces::msg::ParameterDescriptor{});
         k_ = this->get_parameter("k").as_int();
         nodes_ = this->get_parameter("nodes").as_string_array();
     }
@@ -128,10 +128,7 @@ private:
             RCLCPP_ERROR(this->get_logger(), "No get_state client for node %s", node_name.c_str());
             return lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN;
         }
-        auto client = it->second.get_state_client;
-        //print client name
-        RCLCPP_INFO(this->get_logger(), "Client name: %s", client->get_service_name());
-    
+        auto client = it->second.get_state_client;    
         if (!client->wait_for_service(3s)) {
             RCLCPP_ERROR(this->get_logger(), "Service %s not available.", client->get_service_name());
             return lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN;
@@ -146,9 +143,8 @@ private:
             return lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN;
         }
 
-        // Get the result from the shared_future
         if (future_result.get()) {
-            RCLCPP_INFO(this->get_logger(), "[%s] Current state: %u (%s)", node_name.c_str(),
+            RCLCPP_INFO(this->get_logger(), "[%s] Current state: \033[1;34m%u\033[0m (%s)", node_name.c_str(),
                         future_result.get()->current_state.id,
                         future_result.get()->current_state.label.c_str());
             return future_result.get()->current_state.id;
@@ -251,8 +247,8 @@ private:
     void heartbeat_callback(const std_msgs::msg::String::SharedPtr msg, const std::string &node_name) {
         auto it = data_map_.find(node_name);
         if (it != data_map_.end()) {
-            it->second.timer->cancel();
-            it->second.timer->reset();
+            it->second.watchdog->cancel();
+            it->second.watchdog->reset();
             RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Heartbeat received: '%s'\033[0m", node_name.c_str(), msg->data.c_str());
         } else {
             RCLCPP_WARN(this->get_logger(), "Received heartbeat from unknown node: %s", node_name.c_str());
