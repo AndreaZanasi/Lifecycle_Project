@@ -1,16 +1,15 @@
 #!/bin/bash
 
-# Stop gnome-terminal windows running your ROS 2 launch files started by start.sh
+# Kill all ros2 launch processes for your packages
+pkill -f "ros2 launch life_manager"
+pkill -f "ros2 launch node_1"
+pkill -f "ros2 launch node_2"
 
-LAUNCH_FILES=("life_manager_launch.py" "node_1_launch.py" "node_2_launch.py")
-
-for LAUNCH in "${LAUNCH_FILES[@]}"; do
-    # Find gnome-terminal processes running the specific launch file
-    pids=$(pgrep -f "gnome-terminal.*$LAUNCH")
-    if [ -z "$pids" ]; then
-        echo "No gnome-terminal found running: $LAUNCH"
-    else
-        echo "Killing gnome-terminal(s) for: $LAUNCH (PIDs: $pids)"
-        kill $pids
+# Optionally, kill gnome-terminals running those launches
+for pkg in life_manager node_1 node_2; do
+    terminals=$(pgrep -af "gnome-terminal.*ros2 launch $pkg" | awk '{print $1}')
+    if [ -n "$terminals" ]; then
+        echo "Killing gnome-terminal(s) for $pkg: $terminals"
+        kill $terminals
     fi
 done
