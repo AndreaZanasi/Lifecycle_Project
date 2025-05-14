@@ -1,4 +1,4 @@
-# try_lifecycle_manager
+# Lifecycle_Manager
 
 A ROS 2 project demonstrating lifecycle management of nodes with heartbeat monitoring and automatic recovery using a LifeManager node.
 
