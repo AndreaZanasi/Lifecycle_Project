@@ -143,14 +143,12 @@ private:
 
 int main(int argc, char * argv[])
 {
-  // 1) Install SIGFPE handler
   struct sigaction sa{};
   sa.sa_sigaction = fpe_handler;
   sa.sa_flags     = SA_SIGINFO;
   sigemptyset(&sa.sa_mask);
   sigaction(SIGFPE, &sa, nullptr);
 
-  // 2) Initialize ROS 2 and spin node
   rclcpp::init(argc, argv);
   rclcpp::executors::MultiThreadedExecutor executor;
   auto node = std::make_shared<Node1>("node_1");
