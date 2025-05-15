@@ -1,4 +1,6 @@
 #include <chrono>
+#include <csignal>
+#include <csetjmp>
 #include <memory>
 #include <string>
 
@@ -9,6 +11,24 @@
 #include "rclcpp/qos.hpp"
 
 using namespace std::chrono_literals;
+static sigjmp_buf g_jmpbuf;
+
+void fpe_handler(int, siginfo_t*, void*)
+{
+  siglongjmp(g_jmpbuf, 1);
+}
+
+static bool safe_divide_and_recover()
+{
+  if (sigsetjmp(g_jmpbuf, 1) == 0) {
+    volatile int zero = 0;
+    volatile int result = 1 / zero;
+    (void)result;
+    return true;
+  } else {
+    return false;
+  }
+}
 
 // Node1: Lifecycle node that periodically publishes heartbeat messages
 class Node1 : public rclcpp_lifecycle::LifecycleNode
@@ -26,13 +46,17 @@ public:
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
   on_configure(const rclcpp_lifecycle::State &) override
   {
-    rclcpp::QoS qos_profile = rclcpp::QoS(rclcpp::KeepLast(10));
+    rclcpp::QoS qos_profile{rclcpp::KeepLast(10)};
     load_parameters();
 
-    RCLCPP_INFO(get_logger(), "Configuring node: %s, period: %ld ms", node_name_.c_str(), period_.count());
+    RCLCPP_INFO(get_logger(),
+                "Configuring node: %s, heartbeat period: %ld ms",
+                node_name_.c_str(), period_.count());
 
-    pub_ = this->create_publisher<std_msgs::msg::String>("/heartbeat/" + node_name_, qos_profile);
-    timer_ = this->create_wall_timer(period_, std::bind(&Node1::publish_heartbeat, this));
+    pub_ = this->create_publisher<std_msgs::msg::String>(
+      "/heartbeat/" + node_name_, qos_profile);
+    timer_ = this->create_wall_timer(
+      period_, std::bind(&Node1::publish_heartbeat, this));
     return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
   }
 
@@ -68,43 +92,43 @@ public:
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
   on_shutdown(const rclcpp_lifecycle::State & state) override
   {
-    RCLCPP_INFO(get_logger(), "Shutting down node: %s from state %s", node_name_.c_str(), state.label().c_str());
+    RCLCPP_INFO(get_logger(),
+                "Shutting down node: %s from state %s",
+                node_name_.c_str(), state.label().c_str());
     timer_.reset();
     pub_.reset();
     return rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn::SUCCESS;
   }
 
 private:
-  // Declare node parameters with default values
   void declare_parameters() {
     this->declare_parameter<std::string>("node_name", "node_1");
-    this->declare_parameter<int>("period", 1000); // ms
+    this->declare_parameter<int>("period", 1000);  // ms
   }
 
-  // Load parameters from the parameter server
   void load_parameters() {
     node_name_ = this->get_parameter("node_name").as_string();
     int period_ms = this->get_parameter("period").as_int();
     period_ = std::chrono::milliseconds(period_ms);
   }
 
-  // Publish heartbeat message if publisher is activated
   void publish_heartbeat()
   {
     if (!pub_ || !pub_->is_activated()) {
       return;
     }
+
     auto msg = std::make_unique<std_msgs::msg::String>();
     msg->data = node_name_ + " heartbeat";
     RCLCPP_INFO(this->get_logger(), "Publishing: '%s'", msg->data.c_str());
     pub_->publish(std::move(msg));
+
     heartbeat_count_++;
     if (heartbeat_count_ % 10 == 0) {
-      RCLCPP_WARN(this->get_logger(), "\033[33mSimulating error: division by zero after 5 heartbeats.\033[0m");
-      try {
-        throw std::runtime_error("Simulated division by zero error");
-      } catch (const std::exception &e) {
-        RCLCPP_ERROR(this->get_logger(), "Caught exception: %s. Deactivating node.", e.what());
+      RCLCPP_WARN(this->get_logger(), "Attempting real divide-by-zero…");
+      if (!safe_divide_and_recover()) {
+        RCLCPP_ERROR(this->get_logger(),
+                     "Caught SIGFPE divide-by-zero! Deactivating node.");
         this->deactivate();
       }
     }
@@ -119,6 +143,14 @@ private:
 
 int main(int argc, char * argv[])
 {
+  // 1) Install SIGFPE handler
+  struct sigaction sa{};
+  sa.sa_sigaction = fpe_handler;
+  sa.sa_flags     = SA_SIGINFO;
+  sigemptyset(&sa.sa_mask);
+  sigaction(SIGFPE, &sa, nullptr);
+
+  // 2) Initialize ROS 2 and spin node
   rclcpp::init(argc, argv);
   rclcpp::executors::MultiThreadedExecutor executor;
   auto node = std::make_shared<Node1>("node_1");
