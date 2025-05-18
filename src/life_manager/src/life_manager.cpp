@@ -18,7 +18,7 @@ using namespace std::chrono_literals;
 struct NodeData {
     double threshold;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr sub;
-    rclcpp::TimerBase::SharedPtr watchdog; // watchdog
+    rclcpp::TimerBase::SharedPtr watchdog;
     std::shared_ptr<rclcpp::Client<lifecycle_msgs::srv::ChangeState>> change_state_client;
     std::shared_ptr<rclcpp::Client<lifecycle_msgs::srv::GetState>> get_state_client;    
 };
@@ -53,7 +53,6 @@ private:
             auto sub = create_heartbeat_subscription(node_name);
             auto timer = create_heartbeat_timer(node_name, threshold);
 
-            // Create service clients
             auto change_state_client = this->create_client<lifecycle_msgs::srv::ChangeState>(
                 node_name + "/change_state",
                 rmw_qos_profile_services_default,
