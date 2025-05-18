@@ -169,10 +169,7 @@ private:
         auto request = std::make_shared<lifecycle_msgs::srv::ChangeState::Request>();
         request->transition.id = transition;
         
-        // Use shared_future with .share() to properly wait for the result
         auto future_result = client->async_send_request(request).future.share();
-        
-        // Wait for the result with the helper function
         auto future_status = wait_for_result(future_result, 3s);
 
         if (future_status != std::future_status::ready) {
@@ -180,7 +177,6 @@ private:
             return false;
         }
 
-        // Get the result from the shared_future
         if (future_result.get()->success) {
             RCLCPP_INFO(this->get_logger(), "[%s] Successfully transitioned (%u).", 
                        node_name.c_str(), transition);
@@ -197,47 +193,15 @@ private:
         RCLCPP_WARN(this->get_logger(), "\033[1;31m[%s] Missed heartbeat threshold! Taking action.\033[0m", node_name.c_str());
     
         uint8_t state = get_node_state(node_name);
-        if (state != lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN) {
-            RCLCPP_INFO(this->get_logger(), "Current state for node %s: %u", node_name.c_str(), state);
-            if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
-                if (change_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE)) {
-                    RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Node configured successfully.\033[0m", node_name.c_str());
-                    // After configuring, try to activate
-                    uint8_t new_state = get_node_state(node_name);
-                    if (new_state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
-                        if (change_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE)) {
-                            RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Node activated successfully.\033[0m", node_name.c_str());
-                        } else {
-                            RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to activate node after configuring.\033[0m", node_name.c_str());
-                        }
-                    }
-                } else {
-                    RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to configure node.\033[0m", node_name.c_str());
-                }
-            } else if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
-                if (change_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE)) {
-                    RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Node activated successfully.\033[0m", node_name.c_str());
-                } else {
-                    RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to activate node.\033[0m", node_name.c_str());
-                }
-            } else if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
-                // If the node is active, try to deactivate and then reactivate
-                if (change_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE)) {
-                    RCLCPP_WARN(this->get_logger(), "\033[1;33m[%s] Node deactivated due to missed heartbeat. Attempting to reactivate.\033[0m", node_name.c_str());
-                    // After deactivation, try to activate again
-                    uint8_t new_state = get_node_state(node_name);
-                    if (new_state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
-                        if (change_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE)) {
-                            RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Node re-activated successfully after deactivation.\033[0m", node_name.c_str());
-                        } else {
-                            RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to re-activate node after deactivation.\033[0m", node_name.c_str());
-                        }
-                    }
-                } else {
-                    RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to deactivate node.\033[0m", node_name.c_str());
-                }
-            }
-        } else {
+        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+            bring_node_configure(node_name); 
+            state = get_node_state(node_name); 
+        }
+        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+            bring_node_activate(node_name);
+        }
+        
+        else {
             RCLCPP_WARN(this->get_logger(), "Could not determine current state for node %s", node_name.c_str());
         }
     }
@@ -251,6 +215,44 @@ private:
             RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Heartbeat received: '%s'\033[0m", node_name.c_str(), msg->data.c_str());
         } else {
             RCLCPP_WARN(this->get_logger(), "Received heartbeat from unknown node: %s", node_name.c_str());
+        }
+    }
+
+    // Brings the node from unconfigured to configured state
+    void bring_node_configure(const std::string &node_name) {
+        auto it = data_map_.find(node_name);
+        if (it != data_map_.end()) {
+            uint8_t state = get_node_state(node_name);
+            if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+                if (change_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE)) {
+                    RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Node configured successfully.\033[0m", node_name.c_str());
+                } else {
+                    RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to configure node.\033[0m", node_name.c_str());
+                }
+            } else {
+                RCLCPP_WARN(this->get_logger(), "\033[1;33m[%s] Node is not in UNCONFIGURED state.\033[0m", node_name.c_str());
+            }
+        } else {
+            RCLCPP_WARN(this->get_logger(), "\033[1;33mNode %s not found in data map.\033[0m", node_name.c_str());
+        }
+    }
+
+    // Brings the node from inactive to active state
+    void bring_node_activate(const std::string &node_name) {
+        auto it = data_map_.find(node_name);
+        if (it != data_map_.end()) {
+            uint8_t state = get_node_state(node_name);
+            if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+                if (change_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE)) {
+                    RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Node activated successfully.\033[0m", node_name.c_str());
+                } else {
+                    RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to activate node.\033[0m", node_name.c_str());
+                }
+            } else {
+                RCLCPP_WARN(this->get_logger(), "\033[1;33m[%s] Node is not in INACTIVE state.\033[0m", node_name.c_str());
+            }
+        } else {
+            RCLCPP_WARN(this->get_logger(), "\033[1;33mNode %s not found in data map.\033[0m", node_name.c_str());
         }
     }
 };
