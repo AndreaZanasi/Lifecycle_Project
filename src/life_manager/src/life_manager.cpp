@@ -110,7 +110,7 @@ private:
 
     void on_heartbeat_timeout(const std::string &node_name) {
         RCLCPP_WARN(this->get_logger(), "\033[1;31m[%s] Missed heartbeat threshold! Taking action.\033[0m", node_name.c_str());
-        handle_lifecycle_recovery(node_name);
+        recovery(node_name);
     }
 
     // Lifecycle state helpers
@@ -203,7 +203,7 @@ private:
     }
 
     // Lifecycle transitions
-    void handle_lifecycle_recovery(const std::string &node_name) {
+    void recovery(const std::string &node_name) {
         uint8_t state = get_node_state(node_name);
         if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
             bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE, "configured");
