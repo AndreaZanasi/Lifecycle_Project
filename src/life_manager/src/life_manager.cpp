@@ -38,7 +38,7 @@ private:
     std::vector<std::string> nodes_;
     int k_;
 
-    // Declare and retrieve parameters from the parameter server
+    // Parameter handling
     void declare_and_get_parameters() {
         this->declare_parameter<int>("k", 3);
         this->declare_parameter<std::vector<std::string>>("nodes", {}, rcl_interfaces::msg::ParameterDescriptor{});
@@ -46,214 +46,228 @@ private:
         nodes_ = this->get_parameter("nodes").as_string_array();
     }
 
-    // Initialize subscriptions, timers, and service clients for each node
+    // Node initialization
     void initialize_nodes() {
         for (const auto &node_name : nodes_) {
             double threshold = setup_node_parameters(node_name);
-            auto sub = create_heartbeat_subscription(node_name);
-            auto timer = create_heartbeat_timer(node_name, threshold);
-
-            auto change_state_client = this->create_client<lifecycle_msgs::srv::ChangeState>(
-                node_name + "/change_state",
-                rmw_qos_profile_services_default,
-                client_cb_group_
-            );
-            auto get_state_client = this->create_client<lifecycle_msgs::srv::GetState>(
-                node_name + "/get_state",
-                rmw_qos_profile_services_default,
-                client_cb_group_
-            );
-
-            data_map_[node_name] = {threshold, sub, timer, change_state_client, get_state_client};
-
-            RCLCPP_INFO(this->get_logger(), "Created change_state and get_state clients for: %s", node_name.c_str());
+            data_map_[node_name] = {
+                threshold,
+                create_heartbeat_subscription(node_name),
+                create_heartbeat_timer(node_name, threshold),
+                create_service_client<lifecycle_msgs::srv::ChangeState>(node_name, "/change_state"),
+                create_service_client<lifecycle_msgs::srv::GetState>(node_name, "/get_state")
+            };
+            RCLCPP_INFO(this->get_logger(), "Initialized node: %s", node_name.c_str());
         }
     }
 
-    // Setup node-specific parameters and compute threshold
     double setup_node_parameters(const std::string &node_name) {
         std::string period_param = "node_config." + node_name + ".period";
         int node_period_ms = this->declare_parameter<int>(period_param, 1000);
-        double threshold = (node_period_ms / 1000.0) * k_;
-        return threshold;
+        return (node_period_ms / 1000.0) * k_;
     }
 
-    // Create a subscription for heartbeat messages
-    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr create_heartbeat_subscription(const std::string &node_name) {
-        auto topic_name = "/heartbeat/" + node_name;
-        auto sub = this->create_subscription<std_msgs::msg::String>(
-            topic_name, rclcpp::QoS(10),
-            [this, node_name](const std_msgs::msg::String::SharedPtr msg) {
-                this->heartbeat_callback(msg, node_name);
-            }
-        );
-        RCLCPP_INFO(this->get_logger(), "Subscribed to: %s", topic_name.c_str());
-        return sub;
-    }
-
-    // Create a timer to detect missed heartbeats
-    rclcpp::TimerBase::SharedPtr create_heartbeat_timer(const std::string &node_name, double threshold) {
-        auto timer = this->create_wall_timer(
-            std::chrono::duration<double>(threshold),
-            [this, node_name]() {
-                this->heartbeat_timeout(node_name);
-            },
+    // Generic service client creator
+    template<typename ServiceT>
+    std::shared_ptr<rclcpp::Client<ServiceT>> create_service_client(const std::string &node_name, const std::string &suffix) {
+        return this->create_client<ServiceT>(
+            node_name + suffix,
+            rmw_qos_profile_services_default,
             client_cb_group_
         );
-        return timer;
     }
 
-    // Helper function to wait for async service results
-    template<typename FutureT, typename WaitTimeT>
-    std::future_status wait_for_result(
-        FutureT & future,
-        WaitTimeT time_to_wait)
-    {
-        auto end = std::chrono::steady_clock::now() + time_to_wait;
-        std::chrono::milliseconds wait_period(100);
-        std::future_status status = std::future_status::timeout;
-        do {
-            auto now = std::chrono::steady_clock::now();
-            auto time_left = end - now;
-            if (time_left <= std::chrono::seconds(0)) {break;}
-            status = future.wait_for((time_left < wait_period) ? time_left : wait_period);
-        } while (rclcpp::ok() && status != std::future_status::ready);
-        return status;
+    // Heartbeat subscription and timer
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr create_heartbeat_subscription(const std::string &node_name) {
+        auto topic_name = "/heartbeat/" + node_name;
+        return this->create_subscription<std_msgs::msg::String>(
+            topic_name, rclcpp::QoS(10),
+            [this, node_name](const std_msgs::msg::String::SharedPtr msg) {
+                this->on_heartbeat(msg, node_name);
+            }
+        );
     }
 
-    uint8_t get_node_state(const std::string &node_name) {
-        auto it = data_map_.find(node_name);
-        if (it == data_map_.end() || !it->second.get_state_client) {
-            RCLCPP_ERROR(this->get_logger(), "No get_state client for node %s", node_name.c_str());
-            return lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN;
-        }
-        auto client = it->second.get_state_client;    
-        if (!client->wait_for_service(3s)) {
-            RCLCPP_ERROR(this->get_logger(), "Service %s not available.", client->get_service_name());
-            return lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN;
-        }
-    
-        auto request = std::make_shared<lifecycle_msgs::srv::GetState::Request>();
-        auto future_result = client->async_send_request(request).future.share();        
-        auto future_status = wait_for_result(future_result, 3s);
-
-        if (future_status != std::future_status::ready) {
-            RCLCPP_ERROR(this->get_logger(), "\033[1;33mServer time out while changing state for node %s\033[0m", node_name.c_str());
-            return lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN;
-        }
-
-        if (future_result.get()) {
-            RCLCPP_INFO(this->get_logger(), "[%s] Current state: \033[1;34m%u\033[0m (%s)", node_name.c_str(),
-                        future_result.get()->current_state.id,
-                        future_result.get()->current_state.label.c_str());
-            return future_result.get()->current_state.id;
-        } else {
-            RCLCPP_ERROR(this->get_logger(), "Failed to get current state for node %s", node_name.c_str());
-            return lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN;
-        }
+    rclcpp::TimerBase::SharedPtr create_heartbeat_timer(const std::string &node_name, double threshold) {
+        return this->create_wall_timer(
+            std::chrono::duration<double>(threshold),
+            [this, node_name]() { this->on_heartbeat_timeout(node_name); },
+            client_cb_group_
+        );
     }
 
-    bool change_state(const std::string &node_name, uint8_t transition) {
-        auto it = data_map_.find(node_name);
-        if (it == data_map_.end() || !it->second.change_state_client) {
-            RCLCPP_ERROR(this->get_logger(), "No change_state client for node %s", node_name.c_str());
-            return false;
-        }
-        auto client = it->second.change_state_client;
-        
-        if (!client->wait_for_service(3s)) {
-            RCLCPP_ERROR(this->get_logger(), "Service %s not available.", client->get_service_name());
-            return false;
-        }
-        
-        auto request = std::make_shared<lifecycle_msgs::srv::ChangeState::Request>();
-        request->transition.id = transition;
-        
-        auto future_result = client->async_send_request(request).future.share();
-        auto future_status = wait_for_result(future_result, 3s);
-
-        if (future_status != std::future_status::ready) {
-            RCLCPP_ERROR(this->get_logger(), "\033[1;33mServer time out while changing state for node %s\033[0m", node_name.c_str());
-            return false;
-        }
-
-        if (future_result.get()->success) {
-            RCLCPP_INFO(this->get_logger(), "[%s] Successfully transitioned (%u).", 
-                       node_name.c_str(), transition);
-            return true;
-        } else {
-            RCLCPP_ERROR(this->get_logger(), "[%s] Failed to transition (%u).", 
-                        node_name.c_str(), transition);
-            return false;
-        }
-    }
-
-    // Called when a heartbeat is missed
-    void heartbeat_timeout(const std::string &node_name) {
-        RCLCPP_WARN(this->get_logger(), "\033[1;31m[%s] Missed heartbeat threshold! Taking action.\033[0m", node_name.c_str());
-    
-        uint8_t state = get_node_state(node_name);
-        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
-            bring_node_configure(node_name); 
-            state = get_node_state(node_name); 
-        }
-        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
-            bring_node_activate(node_name);
-        }
-        
-        else {
-            RCLCPP_WARN(this->get_logger(), "Could not determine current state for node %s", node_name.c_str());
-        }
-    }
-
-    // Called when a heartbeat is received
-    void heartbeat_callback(const std_msgs::msg::String::SharedPtr msg, const std::string &node_name) {
+    // Heartbeat handling
+    void on_heartbeat(const std_msgs::msg::String::SharedPtr msg, const std::string &node_name) {
         auto it = data_map_.find(node_name);
         if (it != data_map_.end()) {
             it->second.watchdog->cancel();
             it->second.watchdog->reset();
             RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Heartbeat received: '%s'\033[0m", node_name.c_str(), msg->data.c_str());
         } else {
-            RCLCPP_WARN(this->get_logger(), "Received heartbeat from unknown node: %s", node_name.c_str());
+            log_unknown_node_warning(node_name);
         }
     }
 
-    // Brings the node from unconfigured to configured state
-    void bring_node_configure(const std::string &node_name) {
+    void on_heartbeat_timeout(const std::string &node_name) {
+        RCLCPP_WARN(this->get_logger(), "\033[1;31m[%s] Missed heartbeat threshold! Taking action.\033[0m", node_name.c_str());
+        handle_lifecycle_recovery(node_name);
+    }
+
+    // Lifecycle state helpers
+    uint8_t get_node_state(const std::string &node_name) {
+        auto client = get_client<lifecycle_msgs::srv::GetState>(node_name);
+        if (!client) return lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN;
+
+        if (!wait_for_service(client, 3s)) return lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN;
+
+        auto request = std::make_shared<lifecycle_msgs::srv::GetState::Request>();
+        auto future_result = client->async_send_request(request).future.share();
+        if (!wait_for_future(future_result, 3s)) return lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN;
+
+        auto response = future_result.get();
+        if (response) {
+            RCLCPP_INFO(this->get_logger(), "[%s] Current state: \033[1;34m%u\033[0m (%s)", node_name.c_str(),
+                        response->current_state.id, response->current_state.label.c_str());
+            return response->current_state.id;
+        }
+        log_state_error(node_name);
+        return lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN;
+    }
+
+    bool change_state(const std::string &node_name, uint8_t transition) {
+        auto client = get_client<lifecycle_msgs::srv::ChangeState>(node_name);
+        if (!client) return false;
+
+        if (!wait_for_service(client, 3s)) return false;
+
+        auto request = std::make_shared<lifecycle_msgs::srv::ChangeState::Request>();
+        request->transition.id = transition;
+        auto future_result = client->async_send_request(request).future.share();
+        if (!wait_for_future(future_result, 3s)) return false;
+
+        if (future_result.get()->success) {
+            RCLCPP_INFO(this->get_logger(), "[%s] Successfully transitioned (%u).", node_name.c_str(), transition);
+            return true;
+        }
+        RCLCPP_ERROR(this->get_logger(), "[%s] Failed to transition (%u).", node_name.c_str(), transition);
+        return false;
+    }
+
+    // Template helpers for clients and waiting
+    template<typename ServiceT>
+    std::shared_ptr<rclcpp::Client<ServiceT>> get_client(const std::string &node_name) {
         auto it = data_map_.find(node_name);
-        if (it != data_map_.end()) {
-            uint8_t state = get_node_state(node_name);
-            if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
-                if (change_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE)) {
-                    RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Node configured successfully.\033[0m", node_name.c_str());
-                } else {
-                    RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to configure node.\033[0m", node_name.c_str());
-                }
-            } else {
-                RCLCPP_WARN(this->get_logger(), "\033[1;33m[%s] Node is not in UNCONFIGURED state.\033[0m", node_name.c_str());
-            }
-        } else {
-            RCLCPP_WARN(this->get_logger(), "\033[1;33mNode %s not found in data map.\033[0m", node_name.c_str());
+        if (it == data_map_.end()) {
+            log_unknown_node_warning(node_name);
+            return nullptr;
+        }
+        if constexpr (std::is_same<ServiceT, lifecycle_msgs::srv::ChangeState>::value) {
+            return it->second.change_state_client;
+        } else if constexpr (std::is_same<ServiceT, lifecycle_msgs::srv::GetState>::value) {
+            return it->second.get_state_client;
+        }
+        return nullptr;
+    }
+
+    template<typename ClientT>
+    bool wait_for_service(const std::shared_ptr<ClientT> &client, std::chrono::seconds timeout) {
+        if (!client->wait_for_service(timeout)) {
+            RCLCPP_ERROR(this->get_logger(), "Service %s not available.", client->get_service_name());
+            return false;
+        }
+        return true;
+    }
+
+    template<typename FutureT>
+    bool wait_for_future(FutureT &future, std::chrono::seconds timeout) {
+        auto status = wait_for_result(future, timeout);
+        if (status != std::future_status::ready) {
+            RCLCPP_ERROR(this->get_logger(), "\033[1;33mServer time out while waiting for response\033[0m");
+            return false;
+        }
+        return true;
+    }
+
+    template<typename FutureT, typename WaitTimeT>
+    std::future_status wait_for_result(FutureT &future, WaitTimeT time_to_wait) {
+        auto end = std::chrono::steady_clock::now() + time_to_wait;
+        std::chrono::milliseconds wait_period(100);
+        std::future_status status = std::future_status::timeout;
+        do {
+            auto now = std::chrono::steady_clock::now();
+            auto time_left = end - now;
+            if (time_left <= std::chrono::seconds(0)) break;
+            status = future.wait_for((time_left < wait_period) ? time_left : wait_period);
+        } while (rclcpp::ok() && status != std::future_status::ready);
+        return status;
+    }
+
+    // Lifecycle transitions
+    void handle_lifecycle_recovery(const std::string &node_name) {
+        uint8_t state = get_node_state(node_name);
+        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+            bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE, "configured");
+            state = get_node_state(node_name);
+        }
+        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+            bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE, "activated");
+            state = get_node_state(node_name);
+        }
+        if (state != lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+            RCLCPP_WARN(this->get_logger(), "Could not determine current state for node %s", node_name.c_str());
         }
     }
 
-    // Brings the node from inactive to active state
-    void bring_node_activate(const std::string &node_name) {
-        auto it = data_map_.find(node_name);
-        if (it != data_map_.end()) {
-            uint8_t state = get_node_state(node_name);
-            if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
-                if (change_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE)) {
-                    RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Node activated successfully.\033[0m", node_name.c_str());
-                } else {
-                    RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to activate node.\033[0m", node_name.c_str());
-                }
-            } else {
-                RCLCPP_WARN(this->get_logger(), "\033[1;33m[%s] Node is not in INACTIVE state.\033[0m", node_name.c_str());
-            }
+    void bring_node_to_state(const std::string &node_name, uint8_t transition, const std::string &action) {
+        if (change_state(node_name, transition)) {
+            RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Node %s successfully.\033[0m", node_name.c_str(), action.c_str());
         } else {
-            RCLCPP_WARN(this->get_logger(), "\033[1;33mNode %s not found in data map.\033[0m", node_name.c_str());
+            RCLCPP_ERROR(this->get_logger(), "\033[1;31m[%s] Failed to %s node.\033[0m", node_name.c_str(), action.c_str());
         }
+    }
+
+    // Additional transitions
+    void bring_node_deactivate(const std::string &node_name) {
+        uint8_t state = get_node_state(node_name);
+        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+            bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE, "deactivated");
+        } else {
+            RCLCPP_WARN(this->get_logger(), "\033[1;33m[%s] Node is not in ACTIVE state.\033[0m", node_name.c_str());
+        }
+    }
+
+    void bring_node_cleanup(const std::string &node_name) {
+        uint8_t state = get_node_state(node_name);
+        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+            bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_CLEANUP, "cleaned up");
+        } else {
+            RCLCPP_WARN(this->get_logger(), "\033[1;33m[%s] Node is not in ACTIVE state.\033[0m", node_name.c_str());
+        }
+    }
+
+    void bring_node_shutdown(const std::string &node_name) {
+        uint8_t state = get_node_state(node_name);
+        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+            bring_node_deactivate(node_name);
+            state = get_node_state(node_name);
+        }
+        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+            bring_node_cleanup(node_name);
+            state = get_node_state(node_name);
+        }
+        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+            bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN, "shutdown");
+        } else if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN) {
+            RCLCPP_WARN(this->get_logger(), "\033[1;33m[%s] Node is in UNKNOWN state, cannot shutdown.\033[0m", node_name.c_str());
+        }
+    }
+
+    // Logging helpers
+    void log_unknown_node_warning(const std::string &node_name) {
+        RCLCPP_WARN(this->get_logger(), "\033[1;33mNode %s not found in data map.\033[0m", node_name.c_str());
+    }
+    void log_state_error(const std::string &node_name) {
+        RCLCPP_ERROR(this->get_logger(), "Failed to get current state for node %s", node_name.c_str());
     }
 };
 
