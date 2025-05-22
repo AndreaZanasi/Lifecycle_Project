@@ -20,16 +20,27 @@ struct NodeData {
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr sub;
     rclcpp::TimerBase::SharedPtr watchdog;
     std::shared_ptr<rclcpp::Client<lifecycle_msgs::srv::ChangeState>> change_state_client;
-    std::shared_ptr<rclcpp::Client<lifecycle_msgs::srv::GetState>> get_state_client;    
+    std::shared_ptr<rclcpp::Client<lifecycle_msgs::srv::GetState>> get_state_client;
 };
 
 class LifeManager : public rclcpp::Node {
 public:
+
+    std::string mode_ = "default";
+
     LifeManager() : rclcpp::Node("life_manager") {
         client_cb_group_ = this->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
         declare_and_get_parameters();
         initialize_nodes();
         RCLCPP_INFO(this->get_logger(), "Life Manager started.");
+    }
+
+    void call_init() {
+        if (mode_ == "odom") {
+            init_odom();
+        } else {
+            init();
+        }
     }
 
 private:
@@ -46,6 +57,14 @@ private:
         nodes_ = this->get_parameter("nodes").as_string_array();
     }
 
+    void init() {
+        for (const auto &node_name : nodes_) {
+            uint8_t state = get_node_state(node_name);
+            RCLCPP_INFO(this->get_logger(), "Current state: %u", state);
+            recovery(node_name);
+        }
+    }
+
     // Node initialization
     void initialize_nodes() {
         for (const auto &node_name : nodes_) {
@@ -53,7 +72,7 @@ private:
             data_map_[node_name] = {
                 threshold,
                 create_heartbeat_subscription(node_name),
-                create_heartbeat_timer(node_name, threshold),
+                nullptr,
                 create_service_client<lifecycle_msgs::srv::ChangeState>(node_name, "/change_state"),
                 create_service_client<lifecycle_msgs::srv::GetState>(node_name, "/get_state")
             };
@@ -110,7 +129,11 @@ private:
 
     void on_heartbeat_timeout(const std::string &node_name) {
         RCLCPP_WARN(this->get_logger(), "\033[1;31m[%s] Missed heartbeat threshold! Taking action.\033[0m", node_name.c_str());
-        recovery(node_name);
+        if (mode_ == "odom") {
+            recovery_odom();
+        } else {
+            recovery(node_name);
+        }
     }
 
     // Lifecycle state helpers
@@ -211,6 +234,7 @@ private:
         }
         if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
             bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE, "activated");
+            data_map_[node_name].watchdog = create_heartbeat_timer(node_name, data_map_[node_name].threshold);
             state = get_node_state(node_name);
         }
         if (state != lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
@@ -269,6 +293,49 @@ private:
     void log_state_error(const std::string &node_name) {
         RCLCPP_ERROR(this->get_logger(), "Failed to get current state for node %s", node_name.c_str());
     }
+
+    // CUSTOM PART FOR ODOMETRY
+
+    void init_odom() {
+        for (const auto &node_name : nodes_) {
+            uint8_t state = get_node_state(node_name);
+            if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+                bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE, "configured");
+            }
+        }
+
+        const auto node_name = "node_1";
+        uint8_t state = get_node_state(node_name);
+        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+            bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE, "activated");
+            data_map_[node_name].watchdog = create_heartbeat_timer(node_name, data_map_[node_name].threshold);
+        }
+    }
+
+    void recovery_odom() {
+        auto node_name = "node_1";
+        uint8_t state = get_node_state(node_name);
+        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+            bring_node_deactivate(node_name);
+            state = get_node_state(node_name);
+        }
+        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+            bring_node_cleanup(node_name);
+            state = get_node_state(node_name);
+        }
+        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+            bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_UNCONFIGURED_SHUTDOWN, "shutdown");
+        } else if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNKNOWN) {
+            RCLCPP_WARN(this->get_logger(), "\033[1;33m[%s] Node is in UNKNOWN state, cannot shutdown.\033[0m", node_name);
+        }
+        node_name = "node_2";
+        state = get_node_state(node_name);
+        if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+            bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE, "activated");
+            data_map_[node_name].watchdog = create_heartbeat_timer(node_name, data_map_[node_name].threshold);
+        }
+    }
+
 };
 
 int main(int argc, char **argv) {
@@ -277,7 +344,9 @@ int main(int argc, char **argv) {
     auto life_manager_node = std::make_shared<LifeManager>();
     executor.add_node(life_manager_node);
     RCLCPP_INFO(rclcpp::get_logger("main"), "Spinning LifeManager node.");
-    executor.spin();
+    std::thread spin_thread([&executor]() { executor.spin(); });
+    life_manager_node->call_init();
+    spin_thread.join();
     RCLCPP_INFO(rclcpp::get_logger("main"), "LifeManager node stopped.");
     rclcpp::shutdown();
     return 0;
