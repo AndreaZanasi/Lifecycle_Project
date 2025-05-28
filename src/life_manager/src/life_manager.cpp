@@ -187,32 +187,14 @@ void LifeManager::bring_node_to_state(const std::string &node_name, uint8_t tran
     }
 }
 
-void LifeManager::bring_node_deactivate(const std::string &node_name) {
-    uint8_t state = get_node_state(node_name);
-    if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
-        bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE, "deactivated");
-    } else {
-        RCLCPP_WARN(this->get_logger(), "\033[1;33m[%s] Node is not in ACTIVE state.\033[0m", node_name.c_str());
-    }
-}
-
-void LifeManager::bring_node_cleanup(const std::string &node_name) {
-    uint8_t state = get_node_state(node_name);
-    if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
-        bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_CLEANUP, "cleaned up");
-    } else {
-        RCLCPP_WARN(this->get_logger(), "\033[1;33m[%s] Node is not in ACTIVE state.\033[0m", node_name.c_str());
-    }
-}
-
 void LifeManager::bring_node_shutdown(const std::string &node_name) {
     uint8_t state = get_node_state(node_name);
     if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
-        bring_node_deactivate(node_name);
+        bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE, "deactivated");
         state = get_node_state(node_name);
     }
     if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
-        bring_node_cleanup(node_name);
+        bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_CLEANUP, "cleaned up");
         state = get_node_state(node_name);
     }
     if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
