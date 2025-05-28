@@ -20,7 +20,7 @@ void write_null()     { *static_cast<int*>(nullptr) = 42; }
 void overflow_array() { volatile int arr[5]; volatile int v = arr[1000000]; (void)v; }
 
 Node1::Node1(const std::string &name, bool intra) 
-    : BaseTalkerNode(name, intra), heartbeat_count_(0), signal_recovery_count_(0)
+    : BaseTalkerNode(name, intra), heartbeat_count_(0)
 {
     declare_parameters();
 }
@@ -92,28 +92,13 @@ void Node1::publish_heartbeat()
         {overflow_array, "\033[1;32m[Heartbeat %d] Caught SIGSEGV (Array Overflow)! Node recovered.\033[0m"}
     };
 
-    if (heartbeat_count_ % 5 == 0) {
+    if (heartbeat_count_ % 15 == 0) {
         const auto &fault = cases[(heartbeat_count_ / 5) % cases.size()];
         try {
             safe_execute(fault.action);
         } catch (const std::exception &) {
             RCLCPP_FATAL(get_logger(), fault.log_msg, heartbeat_count_);
-            pub_->on_deactivate();
-            return;
         }
-    }
-
-    if (heartbeat_count_ % 10 == 0) {
-        RCLCPP_INFO(get_logger(),
-            "\033[1;37m[Status] Heartbeat: %d, Signal recoveries: %d\033[0m",
-            heartbeat_count_, signal_recovery_count_);
-    }
-
-    if (signal_recovery_count_ >= 10) {
-        RCLCPP_WARN(get_logger(),
-            "\033[1;31mToo many signal recoveries (%d)! Deactivating node for safety.\033[0m",
-            signal_recovery_count_);
-        pub_->on_deactivate();
     }
 }
 
@@ -122,7 +107,7 @@ int main(int argc, char **argv)
     SignalHandler::init();
 
     rclcpp::init(argc, argv);
-    rclcpp::executors::MultiThreadedExecutor executor;
+    rclcpp::executors::SingleThreadedExecutor executor;
     auto node = std::make_shared<Node1>("node_1");
 
     executor.add_node(node->get_node_base_interface());

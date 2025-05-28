@@ -64,7 +64,6 @@ rclcpp::TimerBase::SharedPtr LifeManager::create_heartbeat_timer(const std::stri
 void LifeManager::on_heartbeat(const std_msgs::msg::String::SharedPtr msg, const std::string &node_name) {
     auto it = data_map_.find(node_name);
     if (it != data_map_.end()) {
-        it->second.watchdog->cancel();
         it->second.watchdog->reset();
         RCLCPP_INFO(this->get_logger(), "\033[1;32m[%s] Heartbeat received: '%s'\033[0m", node_name.c_str(), msg->data.c_str());
     } else {
@@ -166,6 +165,10 @@ std::future_status LifeManager::wait_for_result(FutureT &future, WaitTimeT time_
 
 void LifeManager::recovery(const std::string &node_name) {
     uint8_t state = get_node_state(node_name);
+    if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+        bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE, "deactivated");
+        state = get_node_state(node_name);
+    }
     if (state == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
         bring_node_to_state(node_name, lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE, "configured");
         state = get_node_state(node_name);

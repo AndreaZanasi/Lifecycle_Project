@@ -68,7 +68,7 @@ void Node2::publish_heartbeat()
 int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
-    rclcpp::executors::MultiThreadedExecutor executor;
+    rclcpp::executors::SingleThreadedExecutor executor;
     auto node = std::make_shared<Node2>("node_2");
     executor.add_node(node->get_node_base_interface());
     executor.spin();
